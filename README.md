@@ -1,5 +1,4 @@
 # Tổng hợp tiện ích giúp đăng đỉnh tu luyện STV =))
 
-b1: cài python
-b2: chạy lệnh pip install requests bs4
-b3: python main.py
+
+Cài Tampermonkey rồi tải file STV Claim (FormData POST) - Optimized-2025-06-02.user.js sử dụng
