@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2025-06-02
 // @description  Gửi POST request với FormData, hiển thị vật phẩm theo múi giờ Việt Nam (UTC+7)
-// @author       You
+// @author       Ambrose Schulz
 // @match        https://sangtacviet.app/truyen/*/1/*/*/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sangtacviet.app
 // @grant        GM_xmlhttpRequest
