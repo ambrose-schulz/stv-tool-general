@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         STV Claim (Optimized UTC+7)
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-02.2
-// @description  Gửi POST request với FormData, hiển thị vật phẩm, tự động đặt tên Công Pháp/Võ Kỹ
+// @version      2025-06-02.4
+// @description  Tự động nhặt đồ, random tên ngầu và lọc sạch thẻ HTML trong mô tả
 // @author       You
 // @match        https://sangtacviet.app/truyen/*/1/*/*/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sangtacviet.app
@@ -67,7 +67,6 @@
         const currentSetting = getSetting("autoReload");
         const settingBtn = document.createElement("button");
         settingBtn.id = "settingBtn";
-
         settingBtn.innerText = "⚙️";
 
         Object.assign(settingBtn.style, {
@@ -111,7 +110,7 @@
         const grouped = items.reduce((acc, curr) => {
             let key = (curr && curr.name) ? String(curr.name) : "Vật phẩm ẩn/Lỗi tên";
             if (key.includes("Đan")) key = "Đan dược";
-            else if (["Tàn quyển", "thần công", "Thân pháp", "bí kỹ", "vũ kỹ", "bí pháp", "Luyện thể", "Quyết", "Điển", "Kiếm Pháp", "Chưởng"].some(k => key.includes(k))) key = "Võ kỹ/Công pháp";
+            else if (["Tàn quyển", "thần công", "Thân pháp", "bí kỹ", "vũ kỹ", "bí pháp", "Luyện thể", "Quyết", "Điển", "Kiếm Pháp", "Chưởng", "Công Pháp", "Tâm Pháp"].some(k => key.toLowerCase().includes(k.toLowerCase()))) key = "Võ kỹ/Công pháp";
             else if (key.includes("Linh Thạch")) key = "Linh Thạch";
             else if (key.includes("Pháp Tắc")) key = "Pháp Tắc";
 
@@ -207,30 +206,21 @@
                     claimData.append("ajax", "fcollect");
                     claimData.append("c", lastStr);
 
-                    // Khởi tạo tên và info ban đầu
-                    let finalName = item.name ? item.name.replace(/<[^>]*>/g, '') : '';
-                    let finalInfo = item.info ? item.info : '';
+                    let finalName = item.name ? item.name.replace(/<[^>]*>/g, '').trim() : '';
+                    // Lọc bỏ thẻ HTML trong phần mô tả (info)
+                    let finalInfo = item.info ? item.info.replace(/<[^>]*>/g, '').trim() : '';
 
-                    // [SỬA LỖI]: Xử lý đặt tên tự động cho Công Pháp (3) và Võ Kỹ (4)
-                    if (item.type === 3 || item.type === 4) {
-                        if (!finalName || finalName.trim() === '') {
-                            const prefixes = ["Hỗn Độn", "Thái Cổ", "Hồng Hoang", "Cửu U", "Thiên Diễn", "Hư Không", "Tinh Thần", "Đại Đạo", "Vô Cực"];
-                            const suffixes3 = ["Chân Quyết", "Thần Công", "Bảo Điển", "Bí Lục", "Đạo Kinh"];
-                            const suffixes4 = ["Thương Pháp", "Chưởng Pháp", "Quyền Pháp", "Cước Pháp", "Chỉ Pháp", "Thân Pháp"];
+                    if (item.type == 3 || item.type == 4) {
+                        const prefixes = ["Hỗn Độn", "Thái Cổ", "Hồng Hoang", "Cửu U", "Thiên Diễn", "Hư Không", "Tinh Thần", "Đại Đạo", "Vô Cực", "Huyền Thiên", "Bát Hoang"];
+                        const suffixes3 = ["Chân Quyết", "Thần Công", "Bảo Điển", "Bí Lục", "Đạo Kinh", "Tâm Pháp"];
+                        const suffixes4 = ["Thương Pháp", "Chưởng Pháp", "Xích Pháp", "Cước Pháp", "Chỉ Pháp", "Thân Pháp", "Quyền Phổ"];
 
-                            const p = prefixes[Math.floor(Math.random() * prefixes.length)];
-                            const s = item.type === 3
-                                ? suffixes3[Math.floor(Math.random() * suffixes3.length)]
-                                : suffixes4[Math.floor(Math.random() * suffixes4.length)];
+                        const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+                        const s = (item.type == 3)
+                        ? suffixes3[Math.floor(Math.random() * suffixes3.length)]
+                        : suffixes4[Math.floor(Math.random() * suffixes4.length)];
 
-                            finalName = `${p} ${s}`;
-                        }
-
-                        if (!finalInfo || finalInfo.trim() === '') {
-                            finalInfo = item.type === 3
-                                ? "Công pháp thượng cổ cường đại thu được nhờ cơ duyên."
-                                : "Võ kỹ uy lực vô song, thương thiên liệt địa.";
-                        }
+                        finalName = `${p} ${s}`;
 
                         claimData.append("newname", finalName);
                         claimData.append("newinfo", finalInfo);
