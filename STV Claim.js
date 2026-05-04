@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         STV Claim
+// @name         STV Claim (Optimized UTC+7)
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-02
-// @description  Gửi POST request với FormData, hiển thị vật phẩm theo múi giờ Việt Nam (UTC+7)
-// @author       Ambrose Schulz
+// @version      2025-06-02.2
+// @description  Gửi POST request với FormData, hiển thị vật phẩm, tự động đặt tên Công Pháp/Võ Kỹ
+// @author       You
 // @match        https://sangtacviet.app/truyen/*/1/*/*/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sangtacviet.app
 // @grant        GM_xmlhttpRequest
@@ -25,15 +25,16 @@
     };
 
     const saveItem = (name) => {
+        const safeName = name ? String(name) : "Vật phẩm ẩn/Lỗi tên";
         const items = JSON.parse(localStorage.getItem("collectedItems")) || [];
         const timestamp = Date.now();
-        const index = items.findIndex(item => item.name === name);
+        const index = items.findIndex(item => item.name === safeName);
 
         if (index !== -1) {
             items[index].timestamp = timestamp;
             items[index].count = (items[index].count || 1) + 1;
         } else {
-            items.push({ name, timestamp, count: 1 });
+            items.push({ name: safeName, timestamp, count: 1 });
         }
         localStorage.setItem("collectedItems", JSON.stringify(items));
     };
@@ -67,20 +68,12 @@
         const settingBtn = document.createElement("button");
         settingBtn.id = "settingBtn";
 
-        // Chỉ hiển thị icon, không hiện chữ BẬT/TẮT
         settingBtn.innerText = "⚙️";
 
         Object.assign(settingBtn.style, {
-            position: "fixed",
-            bottom: "70px",
-            left: "0px",
-            padding: "10px",
-            // Xanh lá (#28a745) nếu Bật, Đỏ (#dc3545) nếu Tắt
-            background: currentSetting ? "#28a745" : "#dc3545",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-            borderRadius: "5px"
+            position: "fixed", bottom: "70px", left: "0px", padding: "10px",
+            background: currentSetting ? "#28a745" : "#dc3545", color: "#fff",
+            border: "none", cursor: "pointer", borderRadius: "5px"
         });
 
         settingBtn.onclick = toggleAutoReload;
@@ -91,13 +84,8 @@
         const currentSetting = getSetting("autoReload") || false;
         const newSetting = !currentSetting;
         saveSetting("autoReload", newSetting);
-
         const settingBtn = document.getElementById('settingBtn');
-        if (settingBtn) {
-            // Cập nhật màu sắc theo trạng thái mới
-            settingBtn.style.background = newSetting ? "#28a745" : "#dc3545";
-        }
-
+        if (settingBtn) settingBtn.style.background = newSetting ? "#28a745" : "#dc3545";
         showToast("Chế độ tự động reload khi lỗi: " + (newSetting ? "BẬT" : "TẮT"));
     };
 
@@ -121,9 +109,9 @@
         }
 
         const grouped = items.reduce((acc, curr) => {
-            let key = curr.name;
+            let key = (curr && curr.name) ? String(curr.name) : "Vật phẩm ẩn/Lỗi tên";
             if (key.includes("Đan")) key = "Đan dược";
-            else if (["Tàn quyển", "thần công", "Thân pháp", "bí kỹ", "vũ kỹ"].some(k => key.includes(k))) key = "Võ kỹ";
+            else if (["Tàn quyển", "thần công", "Thân pháp", "bí kỹ", "vũ kỹ", "bí pháp", "Luyện thể", "Quyết", "Điển", "Kiếm Pháp", "Chưởng"].some(k => key.includes(k))) key = "Võ kỹ/Công pháp";
             else if (key.includes("Linh Thạch")) key = "Linh Thạch";
             else if (key.includes("Pháp Tắc")) key = "Pháp Tắc";
 
@@ -218,17 +206,45 @@
                     const lastStr = window.location.href.replace(/\/$/, "").split("/").pop();
                     claimData.append("ajax", "fcollect");
                     claimData.append("c", lastStr);
+
+                    // Khởi tạo tên và info ban đầu
+                    let finalName = item.name ? item.name.replace(/<[^>]*>/g, '') : '';
+                    let finalInfo = item.info ? item.info : '';
+
+                    // [SỬA LỖI]: Xử lý đặt tên tự động cho Công Pháp (3) và Võ Kỹ (4)
                     if (item.type === 3 || item.type === 4) {
-                        claimData.append("newname", item.name.replace(/<[^>]*>/g, ''));
-                        claimData.append("newinfo", item.info);
+                        if (!finalName || finalName.trim() === '') {
+                            const prefixes = ["Hỗn Độn", "Thái Cổ", "Hồng Hoang", "Cửu U", "Thiên Diễn", "Hư Không", "Tinh Thần", "Đại Đạo", "Vô Cực"];
+                            const suffixes3 = ["Chân Quyết", "Thần Công", "Bảo Điển", "Bí Lục", "Đạo Kinh"];
+                            const suffixes4 = ["Thương Pháp", "Chưởng Pháp", "Quyền Pháp", "Cước Pháp", "Chỉ Pháp", "Thân Pháp"];
+
+                            const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+                            const s = item.type === 3
+                                ? suffixes3[Math.floor(Math.random() * suffixes3.length)]
+                                : suffixes4[Math.floor(Math.random() * suffixes4.length)];
+
+                            finalName = `${p} ${s}`;
+                        }
+
+                        if (!finalInfo || finalInfo.trim() === '') {
+                            finalInfo = item.type === 3
+                                ? "Công pháp thượng cổ cường đại thu được nhờ cơ duyên."
+                                : "Võ kỹ uy lực vô song, thương thiên liệt địa.";
+                        }
+
+                        claimData.append("newname", finalName);
+                        claimData.append("newinfo", finalInfo);
                     }
+
+                    if (!finalName) finalName = "Vật phẩm vô danh";
+
                     const fcollect = await new Promise(resolve => setTimeout(() => {
                         sendFormData(url + "?ngmar=fcl", claimData).then(resolve).catch(() => resolve(null));
                     }, 1000));
 
                     if (fcollect && fcollect.code && fcollect.code === 1) {
-                        saveItem(item.name);
-                        showToast("Bạn đã nhận được " + item.name);
+                        saveItem(finalName);
+                        showToast("Bạn đã nhận được: " + finalName);
                     } else {
                         showToast("Lỗi nhặt vật phẩm!");
                         if (getSetting("autoReload")) setTimeout(() => location.reload(), 3000);
@@ -237,8 +253,6 @@
                     showToast("Lỗi lấy thông tin vật phẩm!");
                     if (getSetting("autoReload")) setTimeout(() => location.reload(), 3000);
                 }
-            } else {
-                showToast("Không có đồ nhặt!");
             }
         } catch (e) { console.error(e); }
 
