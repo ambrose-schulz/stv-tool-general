@@ -229,39 +229,102 @@
                     if (item.type == 3 || item.type == 4) {
                         if (finalName.indexOf('Công Pháp') >= 0) {
                             finalName = 'Vĩnh Hằng Ma Thiên Lục';
-                            finalInfo = 'Ma thiên nhất lục trấn huyền tông,\r\nQuán cổ thông kim khí tự long.\r\nHuyết dẫn hoàng tuyền khai tuệ mạch,\r\nHồn quy thái cực luyện thần phong.\r\nTâm dung vạn tượng phi sinh diệt,\r\nThức phá thiên ma ngộ sắc không.\r\nBất diệt bất sinh hà vấn đạo,\r\nVĩnh Hằng nguyên tại ngã tâm trung.\r\n' + finalInfo;
+                            finalInfo = `Ma thiên nhất lục trấn huyền tông,
+                            Quán cổ thông kim khí tự long.
+                            Huyết dẫn hoàng tuyền khai tuệ mạch,
+                            Hồn quy thái cực luyện thần phong.
+                            Tâm dung vạn tượng phi sinh diệt,
+                            Thức phá thiên ma ngộ sắc không.
+                            Bất diệt bất sinh hà vấn đạo,
+                            Vĩnh Hằng nguyên tại ngã tâm trung.
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Tàn quyển') >= 0) {
                             finalName = 'Vĩnh Hằng Chân Đồ';
-                            finalInfo = 'Cửu thiên rớt xuống nửa trang thư,\r\nNét chữ mờ phai, lửa tận hư.\r\nMột góc xiêm y còn đọng khí,\r\nBa dòng tâm pháp đã tiêu từ.\r\nKẻ tu lạc lối tìm chân tướng,\r\nNgười ngộ thương cung lạc cõi bờ.\r\nNếu hỏi Vĩnh Hằng sao khuyết bóng,\r\nTàn chương vô tự mới là mơ.\r\n' + finalInfo;
+                            finalInfo = `Cửu thiên rớt xuống nửa trang thư,
+                            Nét chữ mờ phai, lửa tận hư.
+                            Một góc xiêm y còn đọng khí,
+                            Ba dòng tâm pháp đã tiêu từ.
+                            Kẻ tu lạc lối tìm chân tướng,
+                            Người ngộ thương cung lạc cõi bờ.
+                            Nếu hỏi Vĩnh Hằng sao khuyết bóng,
+                            Tàn chương vô tự mới là mơ.
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Công kích vũ kỹ') >= 0) {
                             finalName = 'Phá Thiên Cửu Thức Thương';
-                            finalInfo = 'Nhất thương phá giới động càn khôn\r\nCửu thức liên hoàn diệt quỷ hồn\r\nThế tự lưu tinh xuyên vạn vật\r\nKhí như lôi điện chấn thiên môn\r\nPhong vân tụ hội thân như ảnh\r\nNhật nguyệt luân hồi huyết hóa tồn\r\nSát khí trùng thiên kinh vạn cổ\r\nĐồ long diệt thánh lập uy tôn\r\n' + finalInfo;
+                            finalInfo = `Nhất thương phá giới động càn khôn
+                            Cửu thức liên hoàn diệt quỷ hồn
+                            Thế tự lưu tinh xuyên vạn vật
+                            Khí như lôi điện chấn thiên môn
+                            Phong vân tụ hội thân như ảnh
+                            Nhật nguyệt luân hồi huyết hóa tồn
+                            Sát khí trùng thiên kinh vạn cổ
+                            Đồ long diệt thánh lập uy tôn
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Công kích bí kỹ') >= 0) {
                             finalName = 'Xạ Nhật Thần Cung';
-                            finalInfo = 'Thần cung huyết huyễn quán hằng tinh\r\nNhất tiễn xuyên phá cửu trùng minh\r\nVãn nguyệt vi dực xuyên thiên giới\r\nDẫn tâm vi diễm phần quỷ thành\r\nHuyền nhất thanh thiên địa động\r\nTrùng quang thiểm thước nhật hà kinh\r\nVô hình tiễn khí khu sinh tử\r\nDuy lưu thiên nam đại bàng hình.\r\n' + finalInfo;
+                            finalInfo = `Thần cung huyết huyễn quán hằng tinh
+                            Nhất tiễn xuyên phá cửu trùng minh
+                            Vãn nguyệt vi dực xuyên thiên giới
+                            Dẫn tâm vi diễm phần quỷ thành
+                            Huyền nhất thanh thiên địa động
+                            Trùng quang thiểm thước nhật hà kinh
+                            Vô hình tiễn khí khu sinh tử
+                            Duy lưu thiên nam đại bàng hình.
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Thân pháp') >= 0) {
                             finalName = 'Huyễn Ảnh Thần Tung';
-                            finalInfo = 'Vạn lý trường đồ vạn lý trần,\r\nThân như ảnh mạc huyễn nhân.\r\nPhong vân tùy ý thi triển diệu,\r\nBá giả phiêu dao nhập khách trần.\r\n' + finalInfo;
+                            finalInfo = `Vạn lý trường đồ vạn lý trần
+                            Thân như ảnh mạc huyễn nhân
+                            Phong vân tùy ý thi triển diệu
+                            Bá giả phiêu dao nhập khách trần.
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Tinh thần bí pháp') >= 0) {
                             finalName = 'Nhiếp Hư Thần Niệm';
-                            finalInfo = 'Thần du thái hư phá mê tân,\r\nTróc nguyệt vu thiên, cầm quỷ thần.\r\nNhất niệm vô thanh tham cửu u,\r\nThiên tâm hữu ảnh chiếu mê tâm.\r\nHư không đạp lãng tầm chân ngã,\r\nVũ trụ tuần hoàn định phách linh.\r\nThùy vị thần niệm vô sát lực,\r\nVị tằng tiếp xứ vô biên minh.\r\n' + finalInfo;
+                            finalInfo = `Thần du thái hư phá mê tân
+                            Tróc nguyệt vu thiên, cầm quỷ thần
+                            Nhất niệm vô thanh tham cửu u
+                            Thiên tâm hữu ảnh chiếu mê tâm
+                            Hư không đạp lãng tầm chân ngã
+                            Vũ trụ tuần hoàn định phách linh
+                            Thùy vị thần niệm vô sát lực
+                            Vị tằng tiếp xứ vô biên minh.
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Luyện thể thần công') >= 0) {
                             finalName = 'Thần Tượng Kinh';
-                            finalInfo = 'Đại Tượng Vô Hình Tượng Thiên Tượng,\r\nChân Tượng Vô Tâm Tượng Tượng Nguyên.\r\n' + finalInfo;
+                            finalInfo = `Đại Tượng Vô Hình Tượng Thiên Tượng
+                            Chân Tượng Vô Tâm Tượng Tượng Nguyên
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Luyện thể công pháp') >= 0) {
                             finalName = 'Linh Cốt Luyện Thể Pháp';
-                            finalInfo = 'Thân thể dĩ Linh khí luyện hóa,\r\nCốt cách dĩ Linh khí ma luyện.\r\nToàn thân linh lực cuồn cuộn, \r\nBách khiếu linh khí thông suốt, \r\nTâm thần hằng định, \r\nMệnh mạch trường tồn, \r\nCửu khiếu linh thông, \r\nBách mạch thông lưu, \r\nBách mạch linh thông.\r\n' + finalInfo;
+                            finalInfo = `Thân thể dĩ Linh khí luyện hóa
+                            Cốt cách dĩ Linh khí ma luyện
+                            Toàn thân linh lực cuồn cuộn, 
+                            Bách khiếu linh khí thông suốt, 
+                            Tâm thần hằng định, 
+                            Mệnh mạch trường tồn, 
+                            Cửu khiếu linh thông, 
+                            Bách mạch thông lưu, 
+                            Bách mạch linh thông.
+                            ` + finalInfo;
                         }
                         else if (finalName.indexOf('Phòng ngự vũ kỹ') >= 0) {
                             finalName = 'Thiên Cương Hộ Thể Thuẫn';
-                            finalInfo = 'Thiên Cương mười tám trận, \r\nHỗn Độn sáu mươi bốn thế. \r\nDịch chuyển bốn phương là \"Thiên \"\r\nKhí phách tung hoành là \"Cương\"\r\nNhất khí hóa tam thanh, tam thanh sinh vạn vật\r\nNgũ hành tương sinh, tương khắc\r\nKình lực tuần hoàn, vô cùng vô tận\r\nCương khí nương theo thân pháp, uy vũ vô song\r\n' + finalInfo;
+                            finalInfo = `Thiên Cương mười tám trận,
+                            Hỗn Độn sáu mươi bốn thế. 
+                            Dịch chuyển bốn phương là "Thiên "
+                            Khí phách tung hoành là "Cương"
+                            Nhất khí hóa tam thanh, tam thanh sinh vạn vật
+                            Ngũ hành tương sinh, tương khắc
+                            Kình lực tuần hoàn, vô cùng vô tận
+                            Cương khí nương theo thân pháp, uy vũ vô song
+                            ` + finalInfo;
                         }
 
                         claimData.append("newname", finalName);
