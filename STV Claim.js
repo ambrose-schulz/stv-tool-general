@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         STV Claim (Optimized UTC+7)
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-02.4
-// @description  Tự động nhặt đồ, random tên ngầu và lọc sạch thẻ HTML trong mô tả
+// @version      2025-06-02.5
+// @description  Tự động nhặt đồ, gộp chung Công Pháp (type 3) và Võ Kỹ (type 4) trong danh sách
 // @author       You
 // @match        https://sangtacviet.app/truyen/*/1/*/*/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sangtacviet.app
@@ -24,7 +24,8 @@
         return val ? JSON.parse(val) : null;
     };
 
-    const saveItem = (name) => {
+    // [TỐI ƯU]: Lưu thêm tham số 'type' vào localStorage
+    const saveItem = (name, type) => {
         const safeName = name ? String(name) : "Vật phẩm ẩn/Lỗi tên";
         const items = JSON.parse(localStorage.getItem("collectedItems")) || [];
         const timestamp = Date.now();
@@ -33,8 +34,9 @@
         if (index !== -1) {
             items[index].timestamp = timestamp;
             items[index].count = (items[index].count || 1) + 1;
+            if (type) items[index].type = type; // Bổ sung type nếu trước đó chưa có
         } else {
-            items.push({ name: safeName, timestamp, count: 1 });
+            items.push({ name: safeName, timestamp, count: 1, type: type });
         }
         localStorage.setItem("collectedItems", JSON.stringify(items));
     };
@@ -109,10 +111,20 @@
 
         const grouped = items.reduce((acc, curr) => {
             let key = (curr && curr.name) ? String(curr.name) : "Vật phẩm ẩn/Lỗi tên";
-            if (key.includes("Đan")) key = "Đan dược";
-            else if (["Tàn quyển", "thần công", "Thân pháp", "bí kỹ", "vũ kỹ", "bí pháp", "Luyện thể", "Quyết", "Điển", "Kiếm Pháp", "Chưởng", "Công Pháp", "Tâm Pháp"].some(k => key.toLowerCase().includes(k.toLowerCase()))) key = "Võ kỹ/Công pháp";
-            else if (key.includes("Linh Thạch")) key = "Linh Thạch";
-            else if (key.includes("Pháp Tắc")) key = "Pháp Tắc";
+
+            // [TỐI ƯU]: Gộp nhóm trực tiếp bằng type nếu có
+            if (curr.type == 3) {
+                key = "Công Pháp (Các loại)";
+            } else if (curr.type == 4) {
+                key = "Võ Kỹ (Các loại)";
+            } else {
+                // Xử lý fallback cho các đồ cũ lưu trước đó (hoặc đan dược/linh thạch)
+                if (key.includes("Đan")) key = "Đan dược";
+                else if (["Kiếm Pháp", "Chưởng", "vũ kỹ", "Thân pháp", "Cước", "Đao"].some(k => key.toLowerCase().includes(k.toLowerCase()))) key = "Võ Kỹ (Các loại)";
+                else if (["Tàn quyển", "thần công", "bí kỹ", "bí pháp", "Luyện thể", "Quyết", "Điển", "Công Pháp", "Tâm Pháp"].some(k => key.toLowerCase().includes(k.toLowerCase()))) key = "Công Pháp (Các loại)";
+                else if (key.includes("Linh Thạch")) key = "Linh Thạch";
+                else if (key.includes("Pháp Tắc")) key = "Pháp Tắc";
+            }
 
             if (!acc[key]) acc[key] = { count: 0, lastTimestamp: 0 };
             acc[key].count += (curr.count || 1);
@@ -136,7 +148,7 @@
         });
         document.body.appendChild(listDiv);
 
-        listDiv.innerHTML = "<strong>Danh sách vật phẩm:</strong><br>";
+        listDiv.innerHTML = "<strong>Danh sách vật phẩm:</strong>\r\n";
         sortedItems.forEach((item, index) => {
             const timeStr = new Date(item.lastTimestamp).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
             listDiv.innerHTML += `<p>${index + 1}. ${item.name} (x${item.count}) - Gần nhất: ${timeStr}</p>`;
@@ -207,20 +219,45 @@
                     claimData.append("c", lastStr);
 
                     let finalName = item.name ? item.name.replace(/<[^>]*>/g, '').trim() : '';
-                    // Lọc bỏ thẻ HTML trong phần mô tả (info)
                     let finalInfo = item.info ? item.info.replace(/<[^>]*>/g, '').trim() : '';
 
                     if (item.type == 3 || item.type == 4) {
-                        const prefixes = ["Hỗn Độn", "Thái Cổ", "Hồng Hoang", "Cửu U", "Thiên Diễn", "Hư Không", "Tinh Thần", "Đại Đạo", "Vô Cực", "Huyền Thiên", "Bát Hoang"];
-                        const suffixes3 = ["Chân Quyết", "Thần Công", "Bảo Điển", "Bí Lục", "Đạo Kinh", "Tâm Pháp"];
-                        const suffixes4 = ["Thương Pháp", "Chưởng Pháp", "Xích Pháp", "Cước Pháp", "Chỉ Pháp", "Thân Pháp", "Quyền Phổ"];
-
-                        const p = prefixes[Math.floor(Math.random() * prefixes.length)];
-                        const s = (item.type == 3)
-                        ? suffixes3[Math.floor(Math.random() * suffixes3.length)]
-                        : suffixes4[Math.floor(Math.random() * suffixes4.length)];
-
-                        finalName = `${p} ${s}`;
+                        if (finalName.indexOf('Công Pháp') >= 0) {
+                            finalName = 'Vĩnh Hằng Ma Thiên Lục';
+                            finalInfo = 'Ma thiên nhất lục trấn huyền tông,\r\nQuán cổ thông kim khí tự long.\r\nHuyết dẫn hoàng tuyền khai tuệ mạch,\r\nHồn quy thái cực luyện thần phong.\r\nTâm dung vạn tượng phi sinh diệt,\r\nThức phá thiên ma ngộ sắc không.\r\nBất diệt bất sinh hà vấn đạo,\r\nVĩnh Hằng nguyên tại ngã tâm trung.';
+                        }
+                        else if (finalName.indexOf('Tàn quyển') >= 0) {
+                            finalName = 'Vĩnh Hằng Chân Đồ';
+                            finalInfo = 'Cửu thiên rớt xuống nửa trang thư,\r\nNét chữ mờ phai, lửa tận hư.\r\nMột góc xiêm y còn đọng khí,\r\nBa dòng tâm pháp đã tiêu từ.\r\nKẻ tu lạc lối tìm chân tướng,\r\nNgười ngộ thương cung lạc cõi bờ.\r\nNếu hỏi Vĩnh Hằng sao khuyết bóng,\r\nTàn chương vô tự mới là mơ.';
+                        }
+                        else if (finalName.indexOf('Công kích vũ kỹ') >= 0) {
+                            finalName = 'Phá Thiên Cửu Thức Thương';
+                            finalInfo = 'Nhất thương phá giới động càn khôn\r\nCửu thức liên hoàn diệt quỷ hồn\r\nThế tự lưu tinh xuyên vạn vật\r\nKhí như lôi điện chấn thiên môn\r\nPhong vân tụ hội thân như ảnh\r\nNhật nguyệt luân hồi huyết hóa tồn\r\nSát khí trùng thiên kinh vạn cổ\r\nĐồ long diệt thánh lập uy tôn';
+                        }
+                        else if (finalName.indexOf('Công kích bí kỹ') >= 0) {
+                            finalName = 'Xạ Nhật Thần Cung';
+                            finalInfo = 'Thần cung huyết huyễn quán hằng tinh\r\nNhất tiễn xuyên phá cửu trùng minh\r\nVãn nguyệt vi dực xuyên thiên giới\r\nDẫn tâm vi diễm phần quỷ thành\r\nHuyền nhất thanh thiên địa động\r\nTrùng quang thiểm thước nhật hà kinh\r\nVô hình tiễn khí khu sinh tử\r\nDuy lưu thiên nam đại bàng hình.';
+                        }
+                        else if (finalName.indexOf('Thân pháp') >= 0) {
+                            finalName = 'Huyễn Ảnh Thần Tung';
+                            finalInfo = 'Vạn lý trường đồ vạn lý trần,\r\nThân như ảnh mạc huyễn nhân.\r\nPhong vân tùy ý thi triển diệu,\r\nBá giả phiêu dao nhập khách trần.';
+                        }
+                        else if (finalName.indexOf('Tinh thần bí pháp') >= 0) {
+                            finalName = 'Nhiếp Hư Thần Niệm';
+                            finalInfo = 'Thần du thái hư phá mê tân,\r\nTróc nguyệt vu thiên, cầm quỷ thần.\r\nNhất niệm vô thanh tham cửu u,\r\nThiên tâm hữu ảnh chiếu mê tâm.\r\nHư không đạp lãng tầm chân ngã,\r\nVũ trụ tuần hoàn định phách linh.\r\nThùy vị thần niệm vô sát lực,\r\nVị tằng tiếp xứ vô biên minh.';
+                        }
+                        else if (finalName.indexOf('Luyện thể thần công') >= 0) {
+                            finalName = 'Thần Tượng Kinh';
+                            finalInfo = 'Đại Tượng Vô Hình Tượng Thiên Tượng,\r\nChân Tượng Vô Tâm Tượng Tượng Nguyên.';
+                        }
+                        else if (finalName.indexOf('Luyện thể công pháp') >= 0) {
+                            finalName = 'Linh Cốt Luyện Thể Pháp';
+                            finalInfo = 'Thân thể dĩ Linh khí luyện hóa,\r\nCốt cách dĩ Linh khí ma luyện.\r\nToàn thân linh lực cuồn cuộn, \r\nBách khiếu linh khí thông suốt, \r\nTâm thần hằng định, \r\nMệnh mạch trường tồn, \r\nCửu khiếu linh thông, \r\nBách mạch thông lưu, \r\nBách mạch linh thông.';
+                        }
+                        else if (finalName.indexOf('Phòng ngự vũ kỹ') >= 0) {
+                            finalName = 'Thiên Cương Hộ Thể Thuẫn';
+                            finalInfo = 'Thiên Cương mười tám trận, \r\nHỗn Độn sáu mươi bốn thế. \r\nDịch chuyển bốn phương là \"Thiên \"\r\nKhí phách tung hoành là \"Cương\"\r\nNhất khí hóa tam thanh, tam thanh sinh vạn vật\r\nNgũ hành tương sinh, tương khắc\r\nKình lực tuần hoàn, vô cùng vô tận\r\nCương khí nương theo thân pháp, uy vũ vô song';
+                        }
 
                         claimData.append("newname", finalName);
                         claimData.append("newinfo", finalInfo);
@@ -233,7 +270,8 @@
                     }, 1000));
 
                     if (fcollect && fcollect.code && fcollect.code === 1) {
-                        saveItem(finalName);
+                        // [TỐI ƯU]: Gửi kèm item.type để lưu vào bộ nhớ
+                        saveItem(finalName, item.type);
                         showToast("Bạn đã nhận được: " + finalName);
                     } else {
                         showToast("Lỗi nhặt vật phẩm!");
