@@ -1,10 +1,15 @@
 // ==UserScript==
 // @name         STV Claim (Optimized UTC+7)
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-02.5
+// @version      2025-06-02.6
 // @description  Tự động nhặt đồ, gộp chung Công Pháp (type 3) và Võ Kỹ (type 4) trong danh sách
-// @author       You
-// @match        https://sangtacviet.app/truyen/*/1/*/*/
+// @author       Ambrose Schulz
+// @match        *://sangtacviet.app/truyen/*/1/*/*/
+// @match        *://*.sangtacviet.app/truyen/*/1/*/*/
+// @match        *://sangtacviet.vip/truyen/*/1/*/*/
+// @match        *://*.sangtacviet.vip/truyen/*/1/*/*/
+// @match        *://sangtacviet.com/truyen/*/1/*/*/
+// @match        *://*.sangtacviet.com/truyen/*/1/*/*/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sangtacviet.app
 // @grant        GM_xmlhttpRequest
 // @connect      *
@@ -224,39 +229,39 @@
                     if (item.type == 3 || item.type == 4) {
                         if (finalName.indexOf('Công Pháp') >= 0) {
                             finalName = 'Vĩnh Hằng Ma Thiên Lục';
-                            finalInfo = 'Ma thiên nhất lục trấn huyền tông,\r\nQuán cổ thông kim khí tự long.\r\nHuyết dẫn hoàng tuyền khai tuệ mạch,\r\nHồn quy thái cực luyện thần phong.\r\nTâm dung vạn tượng phi sinh diệt,\r\nThức phá thiên ma ngộ sắc không.\r\nBất diệt bất sinh hà vấn đạo,\r\nVĩnh Hằng nguyên tại ngã tâm trung.';
+                            finalInfo = 'Ma thiên nhất lục trấn huyền tông,\r\nQuán cổ thông kim khí tự long.\r\nHuyết dẫn hoàng tuyền khai tuệ mạch,\r\nHồn quy thái cực luyện thần phong.\r\nTâm dung vạn tượng phi sinh diệt,\r\nThức phá thiên ma ngộ sắc không.\r\nBất diệt bất sinh hà vấn đạo,\r\nVĩnh Hằng nguyên tại ngã tâm trung.\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Tàn quyển') >= 0) {
                             finalName = 'Vĩnh Hằng Chân Đồ';
-                            finalInfo = 'Cửu thiên rớt xuống nửa trang thư,\r\nNét chữ mờ phai, lửa tận hư.\r\nMột góc xiêm y còn đọng khí,\r\nBa dòng tâm pháp đã tiêu từ.\r\nKẻ tu lạc lối tìm chân tướng,\r\nNgười ngộ thương cung lạc cõi bờ.\r\nNếu hỏi Vĩnh Hằng sao khuyết bóng,\r\nTàn chương vô tự mới là mơ.';
+                            finalInfo = 'Cửu thiên rớt xuống nửa trang thư,\r\nNét chữ mờ phai, lửa tận hư.\r\nMột góc xiêm y còn đọng khí,\r\nBa dòng tâm pháp đã tiêu từ.\r\nKẻ tu lạc lối tìm chân tướng,\r\nNgười ngộ thương cung lạc cõi bờ.\r\nNếu hỏi Vĩnh Hằng sao khuyết bóng,\r\nTàn chương vô tự mới là mơ.\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Công kích vũ kỹ') >= 0) {
                             finalName = 'Phá Thiên Cửu Thức Thương';
-                            finalInfo = 'Nhất thương phá giới động càn khôn\r\nCửu thức liên hoàn diệt quỷ hồn\r\nThế tự lưu tinh xuyên vạn vật\r\nKhí như lôi điện chấn thiên môn\r\nPhong vân tụ hội thân như ảnh\r\nNhật nguyệt luân hồi huyết hóa tồn\r\nSát khí trùng thiên kinh vạn cổ\r\nĐồ long diệt thánh lập uy tôn';
+                            finalInfo = 'Nhất thương phá giới động càn khôn\r\nCửu thức liên hoàn diệt quỷ hồn\r\nThế tự lưu tinh xuyên vạn vật\r\nKhí như lôi điện chấn thiên môn\r\nPhong vân tụ hội thân như ảnh\r\nNhật nguyệt luân hồi huyết hóa tồn\r\nSát khí trùng thiên kinh vạn cổ\r\nĐồ long diệt thánh lập uy tôn\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Công kích bí kỹ') >= 0) {
                             finalName = 'Xạ Nhật Thần Cung';
-                            finalInfo = 'Thần cung huyết huyễn quán hằng tinh\r\nNhất tiễn xuyên phá cửu trùng minh\r\nVãn nguyệt vi dực xuyên thiên giới\r\nDẫn tâm vi diễm phần quỷ thành\r\nHuyền nhất thanh thiên địa động\r\nTrùng quang thiểm thước nhật hà kinh\r\nVô hình tiễn khí khu sinh tử\r\nDuy lưu thiên nam đại bàng hình.';
+                            finalInfo = 'Thần cung huyết huyễn quán hằng tinh\r\nNhất tiễn xuyên phá cửu trùng minh\r\nVãn nguyệt vi dực xuyên thiên giới\r\nDẫn tâm vi diễm phần quỷ thành\r\nHuyền nhất thanh thiên địa động\r\nTrùng quang thiểm thước nhật hà kinh\r\nVô hình tiễn khí khu sinh tử\r\nDuy lưu thiên nam đại bàng hình.\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Thân pháp') >= 0) {
                             finalName = 'Huyễn Ảnh Thần Tung';
-                            finalInfo = 'Vạn lý trường đồ vạn lý trần,\r\nThân như ảnh mạc huyễn nhân.\r\nPhong vân tùy ý thi triển diệu,\r\nBá giả phiêu dao nhập khách trần.';
+                            finalInfo = 'Vạn lý trường đồ vạn lý trần,\r\nThân như ảnh mạc huyễn nhân.\r\nPhong vân tùy ý thi triển diệu,\r\nBá giả phiêu dao nhập khách trần.\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Tinh thần bí pháp') >= 0) {
                             finalName = 'Nhiếp Hư Thần Niệm';
-                            finalInfo = 'Thần du thái hư phá mê tân,\r\nTróc nguyệt vu thiên, cầm quỷ thần.\r\nNhất niệm vô thanh tham cửu u,\r\nThiên tâm hữu ảnh chiếu mê tâm.\r\nHư không đạp lãng tầm chân ngã,\r\nVũ trụ tuần hoàn định phách linh.\r\nThùy vị thần niệm vô sát lực,\r\nVị tằng tiếp xứ vô biên minh.';
+                            finalInfo = 'Thần du thái hư phá mê tân,\r\nTróc nguyệt vu thiên, cầm quỷ thần.\r\nNhất niệm vô thanh tham cửu u,\r\nThiên tâm hữu ảnh chiếu mê tâm.\r\nHư không đạp lãng tầm chân ngã,\r\nVũ trụ tuần hoàn định phách linh.\r\nThùy vị thần niệm vô sát lực,\r\nVị tằng tiếp xứ vô biên minh.\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Luyện thể thần công') >= 0) {
                             finalName = 'Thần Tượng Kinh';
-                            finalInfo = 'Đại Tượng Vô Hình Tượng Thiên Tượng,\r\nChân Tượng Vô Tâm Tượng Tượng Nguyên.';
+                            finalInfo = 'Đại Tượng Vô Hình Tượng Thiên Tượng,\r\nChân Tượng Vô Tâm Tượng Tượng Nguyên.\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Luyện thể công pháp') >= 0) {
                             finalName = 'Linh Cốt Luyện Thể Pháp';
-                            finalInfo = 'Thân thể dĩ Linh khí luyện hóa,\r\nCốt cách dĩ Linh khí ma luyện.\r\nToàn thân linh lực cuồn cuộn, \r\nBách khiếu linh khí thông suốt, \r\nTâm thần hằng định, \r\nMệnh mạch trường tồn, \r\nCửu khiếu linh thông, \r\nBách mạch thông lưu, \r\nBách mạch linh thông.';
+                            finalInfo = 'Thân thể dĩ Linh khí luyện hóa,\r\nCốt cách dĩ Linh khí ma luyện.\r\nToàn thân linh lực cuồn cuộn, \r\nBách khiếu linh khí thông suốt, \r\nTâm thần hằng định, \r\nMệnh mạch trường tồn, \r\nCửu khiếu linh thông, \r\nBách mạch thông lưu, \r\nBách mạch linh thông.\r\n' + finalInfo;
                         }
                         else if (finalName.indexOf('Phòng ngự vũ kỹ') >= 0) {
                             finalName = 'Thiên Cương Hộ Thể Thuẫn';
-                            finalInfo = 'Thiên Cương mười tám trận, \r\nHỗn Độn sáu mươi bốn thế. \r\nDịch chuyển bốn phương là \"Thiên \"\r\nKhí phách tung hoành là \"Cương\"\r\nNhất khí hóa tam thanh, tam thanh sinh vạn vật\r\nNgũ hành tương sinh, tương khắc\r\nKình lực tuần hoàn, vô cùng vô tận\r\nCương khí nương theo thân pháp, uy vũ vô song';
+                            finalInfo = 'Thiên Cương mười tám trận, \r\nHỗn Độn sáu mươi bốn thế. \r\nDịch chuyển bốn phương là \"Thiên \"\r\nKhí phách tung hoành là \"Cương\"\r\nNhất khí hóa tam thanh, tam thanh sinh vạn vật\r\nNgũ hành tương sinh, tương khắc\r\nKình lực tuần hoàn, vô cùng vô tận\r\nCương khí nương theo thân pháp, uy vũ vô song\r\n' + finalInfo;
                         }
 
                         claimData.append("newname", finalName);
