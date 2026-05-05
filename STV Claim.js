@@ -224,7 +224,8 @@
                     claimData.append("c", lastStr);
 
                     let finalName = item.name ? item.name.replace(/<[^>]*>/g, '').trim() : '';
-                    let finalInfo = item.info ? item.info.replace(/<[^>]*>/g, '').trim() : '';
+                    let rawInfo = item.info ? item.info.replace(/<[^>]*>/g, '').trim() : '';
+                    let finalInfo = rawInfo.replace(/^.*?(Tăng\s*\d+%.*)$/is, '$1');
 
                     if (item.type == 3 || item.type == 4) {
                         if (finalName.indexOf('Công Pháp') >= 0) {
